@@ -91,6 +91,9 @@ public class DatabaseConnection {
                     case 3:
                         driver = ("me.yic.libs.mariadb.jdbc.Driver");
                         break;
+                    case 4:
+                        driver = ("me.yic.libs.postgresql.jdbc.Driver");
+                        break;
                 }
             } else {
                 switch (XConomyLoad.DConfig.getStorageType()) {
@@ -108,6 +111,9 @@ public class DatabaseConnection {
                         break;
                     case 3:
                         driver = ("org.mariadb.jdbc.Driver");
+                        break;
+                    case 4:
+                        driver = ("org.postgresql.Driver");
                         break;
                 }
             }
@@ -132,6 +138,7 @@ public class DatabaseConnection {
                         break;
                     case 2:
                     case 3:
+                    case 4:
                         connection = DriverManager.getConnection(url, XConomyLoad.DConfig.getuser(), XConomyLoad.DConfig.getpass());
                         break;
                 }

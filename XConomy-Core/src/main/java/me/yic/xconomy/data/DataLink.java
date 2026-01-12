@@ -62,10 +62,15 @@ public class DataLink{
                 SQLSetup.setupMySqlTable();
                 break;
 
+            case 4:
+                XConomy.getInstance().logger("数据保存方式", 4, " - PostgreSQL");
+                SQLSetup.setupMySqlTable();
+                break;
+
         }
 
         if (SQL.con()) {
-            if (XConomyLoad.DConfig.getStorageType() == 2 || XConomyLoad.DConfig.getStorageType() == 3) {
+            if (XConomyLoad.DConfig.getStorageType() == 2 || XConomyLoad.DConfig.getStorageType() == 3 || XConomyLoad.DConfig.getStorageType() == 4) {
                 SQL.getwaittimeout();
             }
             SQL.createTable();

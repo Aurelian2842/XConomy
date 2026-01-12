@@ -49,6 +49,8 @@ public class DataBaseConfig {
             return 2;
         }else if (config.getString("Settings.storage-type").equalsIgnoreCase("MariaDB")) {
             return 3;
+        }else if (config.getString("Settings.storage-type").equalsIgnoreCase("PostgreSQL")) {
+            return 4;
         }
         return 1;
     }
@@ -86,28 +88,28 @@ public class DataBaseConfig {
     public String gethost() {
         if (getStorageType() == 1) {
             return config.getString("SQLite.path");
-        } else if (getStorageType() == 2 || getStorageType() == 3) {
+        } else if (getStorageType() == 2 || getStorageType() == 3 || getStorageType() == 4) {
             return config.getString("MySQL.host");
         }
         return "";
     }
 
     public String getuser() {
-        if (getStorageType() == 2 || getStorageType() == 3) {
+        if (getStorageType() == 2 || getStorageType() == 3 || getStorageType() == 4) {
             return config.getString("MySQL.user");
         }
         return "";
     }
 
     public String getpass() {
-        if (getStorageType() == 2 || getStorageType() == 3) {
+        if (getStorageType() == 2 || getStorageType() == 3 || getStorageType() == 4) {
             return config.getString("MySQL.pass");
         }
         return "";
     }
 
     public String gettablesuffix() {
-        if (getStorageType() == 2 || getStorageType() == 3) {
+        if (getStorageType() == 2 || getStorageType() == 3 || getStorageType() == 4) {
             return config.getString("MySQL.table-suffix");
         }
         return "";
@@ -117,20 +119,28 @@ public class DataBaseConfig {
     public String geturl() {
         if (getStorageType() == 2 || getStorageType() == 3) {
             String url = "jdbc:mysql://";
-            if (getStorageType() == 3){
+            if (getStorageType() == 3) {
                 url = "jdbc:mariadb://";
+            }
+            if (getStorageType() == 4) {
+                url = "jdbc:postgresql://";
             }
             url += config.getString("MySQL.host")
                     + ":" + config.getString("MySQL.port") + "/"
-                    + config.getString("MySQL.database") + "?characterEncoding="
-                    + ENCODING + "&useSSL="
-                    + config.getString("MySQL.property.usessl");
-            if (config.getString("MySQL.property.timezone") != null &&
-                    !config.getString("MySQL.property.timezone").equals("")) {
-                url = url + "&serverTimezone=" + config.getString("MySQL.property.timezone");
-            }
-            if (config.getBoolean("MySQL.property.allowPublicKeyRetrieval")) {
-                url = url + "&allowPublicKeyRetrieval=true";
+                    + config.getString("MySQL.database");
+            if (getStorageType() == 2 || getStorageType() == 3) {
+                url += "?characterEncoding="
+                        + ENCODING + "&useSSL="
+                        + config.getString("MySQL.property.usessl");
+                if (config.getString("MySQL.property.timezone") != null &&
+                        !config.getString("MySQL.property.timezone").equals("")) {
+                    url = url + "&serverTimezone=" + config.getString("MySQL.property.timezone");
+                }
+                if (config.getBoolean("MySQL.property.allowPublicKeyRetrieval")) {
+                    url = url + "&allowPublicKeyRetrieval=true";
+                }
+            } else if (getStorageType() == 4) {
+                url += "?ssl=" + config.getString("MySQL.property.ssl");
             }
             return url;
         }
@@ -149,6 +159,8 @@ public class DataBaseConfig {
             case 3:
                 XConomy.getInstance().logger(null, 0, mess.replace("%type%", "MariaDB"));
                 break;
+            case 4:
+                XConomy.getInstance().logger(null, 0, mess.replace("%type%", "PostgreSQL"));
         }
     }
 
